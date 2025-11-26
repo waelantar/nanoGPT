@@ -1,12 +1,43 @@
-.DS_Store
-.idea
-.ipynb_checkpoints/
-.vscode
-__pycache__/
-*.bin
-*.pkl
-*.pt
+```
+# Compiled and build artifacts
 *.pyc
-input.txt
-env/
+__pycache__/
+*.o
+*.obj
+*.out
+
+# Dependencies
+.venv/
 venv/
+node_modules/
+dist/
+build/
+target/
+.gradle/
+.mypy_cache/
+.pytest_cache/
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+.env.*
+
+# Editors
+.vscode/
+.idea/
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# System files
+.DS_Store
+Thumbs.db
+```
