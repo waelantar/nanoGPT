@@ -4,36 +4,31 @@
 __pycache__/
 *.o
 *.obj
-*.so
-*.dylib
-*.dll
-*.exe
 *.out
 
 # Dependencies
 .venv/
 venv/
-env/
-.env
-.env.local
-.env.*
+node_modules/
 
 # Logs and temp files
 *.log
 *.tmp
 *.swp
-*.swo
+
+# Environment
+.env
+.env.local
+*.env.*
 
 # Editors
 .vscode/
 .idea/
-*.swp
-*.swo
 
 # Coverage
-.coverage
 coverage/
 htmlcov/
+.coverage
 
 # Python specific
 *.pyc
@@ -42,20 +37,24 @@ __pycache__/
 *.pyd
 .Python
 *.so
+
+# Distribution / packaging
 .Python
+*.so
+.Python
+*.pyc
+__pycache__/
+*$py.class
+*$py.py
+*$py.pyc
+*$py.pyo
+*.zip
+*.tar.gz
+*.tar.bz2
 *.egg-info/
 .eggs/
 dist/
 build/
 *.egg
-*.zip
-*.tar.gz
 *.whl
-.pytest_cache/
-.mypy_cache/
-.tox/
-
-# System files
-.DS_Store
-Thumbs.db
 ```

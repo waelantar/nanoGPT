@@ -54,21 +54,33 @@ This research project investigated the transfer of efficiency principles from Re
 
 3. **Generation Acceleration**: The speculative decoding approach demonstrates the effectiveness of the RecSys-inspired "fast retrieval, slow ranking" paradigm for LLM generation.
 
-## Benchmark Results Summary
+## Corrected Benchmark Results (Accurate Measurements)
 
-| Model | Avg Time (s) | Speed vs Standard GPT | Notes |
-|-------|-------------|---------------------|-------|
-| Standard GPT | 0.1019 | 1.00x | Baseline |
-| Wide & Deep GPT | 0.1360 | 0.75x | Small overhead, separation achieved |
-| PMI Sparse GPT | 1.3200 | 0.08x | High overhead, needs GPU optimization |
-| Speculative Decoding | 0.9180s for 10 tokens | Generation acceleration | Draft-then-verify works |
+| Model | Avg Time (s) | Speed vs Standard GPT | Parameters | Notes |
+|-------|-------------|---------------------|------------|-------|
+| Standard GPT | 0.0841 | 1.00x | 731,264 | Baseline performance |
+| Wide & Deep GPT | 0.1220 | 0.69x | 997,506 | Separates memorization from generalization |
+| Efficient PMI Sparse GPT | 0.5403 | 0.16x | 859,264 | Reduces attention complexity (O(nk) vs O(n²)) |
+| Speculative Decoding | 0.8833s for 10 tokens | 0.61x speed | - | Draft-then-verify with n-gram model |
 
-## Research Contributions
+**Critical Analysis:**
+1. **Wide & Deep embeddings** show expected overhead (75% slower) due to additional embedding pathways - this is expected for small models where parameter sharing is less beneficial
+2. **PMI sparse attention** shows significant overhead (6.4x slower) because naive PyTorch implementations of sparse operations are slower than optimized dense operations on CPU - requires GPU-optimized kernels (Triton/CUTLASS) to realize benefits
+3. **Speculative decoding** shows generation overhead (1.65x slower) because the draft model quality is insufficient to provide meaningful speedups - needs better draft model or larger batch sizes
+4. **All approaches demonstrate the principle** but require proper GPU optimization to achieve efficiency gains
 
-1. **First Systematic Transfer**: First comprehensive attempt to transfer RecSys efficiency principles to LLMs
-2. **Validated Architecture**: Wide & Deep embeddings work effectively for LLMs
-3. **Sparse Attention Framework**: PMI-based sparse attention framework established
-4. **Generation Acceleration**: Speculative decoding with RecSys-inspired approach
+**Key Insights:**
+- **Theoretical complexity gains do not translate to practical speedups** without hardware-optimized implementations
+- **GPU-optimized kernels** (like FlashAttention, sparse attention kernels) are essential for sparse attention methods
+- **Draft model quality** is critical for speculative decoding effectiveness
+- **Model size matters** - overhead becomes beneficial at larger scales where parameter efficiency matters more
+
+## Research Contributions (Corrected)
+
+1. **Negative Results**: Demonstrated that naive implementations of sparse attention and speculative decoding can be slower than standard approaches without proper GPU optimization
+2. **Architectural Framework**: Established a framework for systematically applying RecSys principles to LLMs
+3. **Efficient Wide & Deep**: Validated that Wide & Deep embeddings can be adapted to LLMs, though with overhead for small models
+4. **Implementation Challenges**: Identified key implementation challenges for sparse attention and speculative decoding in LLMs
 
 ## Future Directions
 
@@ -79,10 +91,10 @@ This research project investigated the transfer of efficiency principles from Re
 
 ## Conclusion
 
-The research successfully demonstrated that RecSys efficiency principles can be transferred to LLMs, though with different performance characteristics:
+The research revealed important insights about transferring RecSys efficiency principles to LLMs:
 
-- **Wide & Deep embeddings** provide a solid foundation with minimal overhead
-- **PMI sparse attention** has theoretical benefits but needs GPU optimization
-- **Speculative decoding** effectively accelerates generation
+- **Wide & Deep embeddings** are technically feasible but show overhead for small models (less beneficial when parameter sharing doesn't outweigh additional computation)
+- **PMI sparse attention** has theoretical benefits but requires GPU-optimized implementations to achieve practical speedups - naive implementations can be significantly slower
+- **Speculative decoding** requires high-quality draft models to provide actual acceleration - current implementation shows overhead
 
-This work opens new directions for LLM architecture research by applying decades of RecSys efficiency innovations to the LLM domain.
+**The most important finding**: Theoretical complexity gains do not automatically translate to practical performance improvements without hardware-optimized implementations. This work establishes the framework for future research in RecSys-LLM transfer but demonstrates that careful engineering is required to realize the expected benefits.
