@@ -301,21 +301,25 @@ def create_efficient_pmi_model(vocab_size, embed_dim, num_heads, num_layers, max
             self.norm = nn.LayerNorm(embed_dim)
             self.output_proj = nn.Linear(embed_dim, vocab_size, bias=False)
             
-        def forward(self, token_ids):
-            batch_size, seq_len = token_ids.shape
+        def forward(self, idx, targets=None):
+            batch_size, seq_len = idx.shape
             
             # Embeddings
-            x = self.token_embedding(token_ids) + self.pos_embedding[:, :seq_len, :]
+            x = self.token_embedding(idx) + self.pos_embedding[:, :seq_len, :]
             
             # Apply transformer blocks
             for block in self.blocks:
-                x = block(x, token_ids)
+                x = block(x, idx)
             
             # Final norm and output
             x = self.norm(x)
             logits = self.output_proj(x)
             
-            return logits
+            loss = None
+            if targets is not None:
+                loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
+            
+            return logits, loss
         
         def build_attention_pattern_from_sequence(self, token_ids, pmi_matrix):
             """

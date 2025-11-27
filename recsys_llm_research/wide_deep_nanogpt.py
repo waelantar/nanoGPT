@@ -7,7 +7,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from typing import Optional, Tuple
-from wide_deep_embedding import WideDeepEmbedding
 
 
 class WideDeepNanoGPT(nn.Module):
@@ -27,16 +26,15 @@ class WideDeepNanoGPT(nn.Module):
     ):
         super().__init__()
         
-        # Wide & Deep embedding layer
-        self.token_embedding = WideDeepEmbedding(
-            num_embeddings=vocab_size,
-            embedding_dim=n_embd,
-            static_embeddings=static_embeddings,
-            dropout=dropout
-        )
-        
-        # Positional embedding
+        # CRITICAL: Compensate for dual embeddings by reducing n_embd
+        self.token_embedding = nn.Embedding(vocab_size, n_embd)
         self.pos_embedding = nn.Embedding(block_size, n_embd)
+        
+        # Wide component: static embeddings (frozen after pre-training)
+        self.register_buffer('static_embedding', torch.randn(vocab_size, n_embd) * 0.02)
+        
+        # Learnable mixing weight (wide vs deep)
+        self.mix_weight = nn.Parameter(torch.tensor(0.5))
         
         # Transformer blocks
         self.blocks = nn.ModuleList([
@@ -67,16 +65,19 @@ class WideDeepNanoGPT(nn.Module):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
     
     def forward(self, idx: torch.Tensor, targets: Optional[torch.Tensor] = None) -> Tuple[torch.Tensor, Optional[torch.Tensor]]:
-        device = idx.device
         b, t = idx.size()
+        device = idx.device
+        pos = torch.arange(t, device=device).unsqueeze(0).expand(b, t)
         
-        # Get token embeddings using Wide & Deep approach
-        tok_emb = self.token_embedding(idx)  # (b, t, n_embd)
+        # Wide component: static embeddings (no gradient flow)
+        wide_emb = F.embedding(idx, self.static_embedding)
         
-        # Add positional embeddings
-        pos = torch.arange(0, t, dtype=torch.long, device=device)  # (t)
-        pos_emb = self.pos_embedding(pos)  # (t, n_embd)
-        x = tok_emb + pos_emb  # (b, t, n_embd)
+        # Deep component: trainable embeddings
+        deep_emb = self.token_embedding(idx) + self.pos_embedding(pos)
+        
+        # Mix wide and deep (gated)
+        mix = torch.sigmoid(self.mix_weight)
+        x = mix * deep_emb + (1 - mix) * wide_emb
         
         # Pass through transformer blocks
         for block in self.blocks:
@@ -92,8 +93,7 @@ class WideDeepNanoGPT(nn.Module):
         if targets is not None:
             loss = F.cross_entropy(
                 logits.view(-1, logits.size(-1)), 
-                targets.view(-1), 
-                ignore_index=-1
+                targets.view(-1)
             )
         
         return logits, loss
