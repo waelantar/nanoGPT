@@ -9,9 +9,10 @@ __pycache__/
 # Dependencies
 .venv/
 venv/
-*_env/
-env/
 node_modules/
+dist/
+build/
+*.egg-info/
 
 # Logs and temp files
 *.log
@@ -26,37 +27,24 @@ node_modules/
 # Editors
 .vscode/
 .idea/
+*.swp
+*.swo
 
 # Coverage
+.coverage
 coverage/
 htmlcov/
-.coverage
 
 # Python specific
 *.pyc
 __pycache__/
-*.pyo
-*.pyd
 .Python
 *.so
-
-# Distribution / packaging
-.Python
-*.so
-.Python
-*.pyc
-__pycache__/
-*$py.class
-*$py.py
-*$py.pyc
-*$py.pyo
-*.zip
-*.tar.gz
-*.tar.bz2
-*.egg-info/
-.eggs/
-dist/
-build/
 *.egg
-*.whl
+*.pyd
+*.pyo
+
+# System files
+.DS_Store
+Thumbs.db
 ```
