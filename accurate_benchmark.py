@@ -22,7 +22,31 @@ sys.path.append('recsys_llm_research')
 from recsys_llm_research.wide_deep_nanogpt import WideDeepNanoGPT
 from efficient_pmi_sparse_attention import create_efficient_pmi_model
 from speculative_decoding import create_speculative_model
-from benchmark_pmi_sparse import create_sample_coocurrence_data
+
+def create_sample_coocurrence_data(vocab_size, num_samples=5000):
+    """
+    Create sample co-occurrence data for PMI matrix computation.
+
+    Args:
+        vocab_size: Size of vocabulary
+        num_samples: Number of co-occurrence pairs to generate
+
+    Returns:
+        Dictionary of {(token_i, token_j): count}
+    """
+    cooc_counts = defaultdict(int)
+
+    # Generate random co-occurrence data following a power-law distribution
+    # This simulates realistic token co-occurrence patterns
+    for _ in range(num_samples):
+        # Sample tokens with power-law distribution (more realistic)
+        token_i = np.random.zipf(1.5) % vocab_size
+        token_j = np.random.zipf(1.5) % vocab_size
+
+        if token_i != token_j:  # Don't count self-loops
+            cooc_counts[(token_i, token_j)] += 1
+
+    return dict(cooc_counts)
 
 def benchmark_model(model, input_ids, num_runs=10, warmup_runs=3, model_name="Model", device='cpu'):
     """

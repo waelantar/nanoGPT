@@ -229,6 +229,82 @@ For more questions/discussions feel free to stop by **#nanoGPT** on Discord:
 
 [![](https://dcbadge.vercel.app/api/server/3zy8kqD9Cp?compact=true&style=flat)](https://discord.gg/3zy8kqD9Cp)
 
+## RecSys-LLM Transfer Research
+
+This repository includes research on transferring efficiency principles from Recommender Systems to LLMs.
+
+**🚨 ALL RESULTS INVALID - INSTANT REJECTION STATUS**
+
+**Engineering: 8/10** (excellent measurement framework)
+**Science: 0/10** (fundamentally broken methodology)
+
+**Fatal flaws:**
+- ❌ Parameter mismatch (+36%, +18%) = instant rejection from any venue
+- ❌ Perplexity 3x worse = models not learning (catastrophic failure)
+- ❌ "Efficient" = 25x slower (false advertising)
+- ❌ Zero-time profiling = garbage data
+- ❌ 0.01 MB memory = physically impossible measurements
+
+**Timeline: Week 2 of 12 (9 weeks behind schedule)**
+
+**READ THIS:** [FINAL_VERDICT_AND_ACTION_PLAN.md](FINAL_VERDICT_AND_ACTION_PLAN.md) ⭐
+
+**Required:** Fix parameters to 731K, retrain 3 weeks, quality gates, then benchmark.
+**Status:** NOT publication-ready. DO NOT submit anywhere.
+
+### Current Status
+
+Three approaches have been prototyped:
+1. **Wide & Deep Embeddings** - Separates memorization/generalization (21% slower, needs optimization)
+2. **PMI Sparse Attention** - Attempted sparse attention (25x slower, failed implementation)
+3. **Speculative Decoding** - Reimplementation of existing technique (7x speedup, needs acceptance rate)
+
+### Running Rigorous Benchmark
+
+```bash
+# Run corrected benchmark with proper diagnostics
+python rigorous_benchmark.py
+
+# This includes:
+# - Accurate parameter counting
+# - Perplexity measurement
+# - Memory tracking
+# - Attention profiling
+# - Honest assessment of results
+```
+
+### Key Documentation
+
+**Start here**:
+- [CRITICAL_ISSUES_AND_FIXES.md](CRITICAL_ISSUES_AND_FIXES.md) - What's broken and how we're fixing it
+- [NEXT_STEPS.md](NEXT_STEPS.md) - Actionable plan for completion
+
+**Research files**:
+- `RESEARCH_SUMMARY.md` - Research overview (optimistic, read with caution)
+- `rigorous_benchmark.py` - Corrected benchmarking with diagnostics
+- `accurate_benchmark.py` - Original benchmark (has issues, use rigorous version)
+- `experiments/` - Experiment tracking tools
+
+**Implementation**:
+- `recsys_llm_research/` - Wide & Deep implementation
+- `efficient_pmi_sparse_attention.py` - PMI sparse attention (not actually efficient)
+- `speculative_decoding.py` - Speculative decoding (cite Leviathan et al. 2022)
+
+### Research Quality Checklist
+
+Before claiming results:
+- [x] Accurate parameter counts
+- [x] Perplexity measurement
+- [x] Memory tracking
+- [x] Profiling to verify sparsity
+- [x] Proper citations
+- [ ] Fix Wide & Deep parallelization
+- [ ] Add acceptance rate measurement
+- [ ] Ablation studies
+- [ ] WikiText-103 evaluation
+
+See [NEXT_STEPS.md](NEXT_STEPS.md) for complete action plan.
+
 ## acknowledgements
 
 All nanoGPT experiments are powered by GPUs on [Lambda labs](https://lambdalabs.com), my favorite Cloud GPU provider. Thank you Lambda labs for sponsoring nanoGPT!
