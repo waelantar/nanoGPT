@@ -107,13 +107,13 @@ class Block(nn.Module):
 
 @dataclass
 class GPTConfig:
-    block_size: int = 1024
-    vocab_size: int = 50304 # GPT-2 vocab_size of 50257, padded up to nearest multiple of 64 for efficiency
-    n_layer: int = 12
-    n_head: int = 12
-    n_embd: int = 768
-    dropout: float = 0.0
-    bias: bool = True # True: bias in Linears and LayerNorms, like GPT-2. False: a bit better and faster
+    block_size: int = 64  # Changed to match our experiments
+    vocab_size: int = 1000  # Changed to match our experiments
+    n_layer: int = 3
+    n_head: int = 4
+    n_embd: int = 128
+    dropout: float = 0.1
+    bias: bool = False  # Changed to match our parameter target
 
 class GPT(nn.Module):
 
@@ -168,6 +168,13 @@ class GPT(nn.Module):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
 
     def forward(self, idx, targets=None):
+        """FIXED: Handles both (batch, seq) and (seq,) inputs"""
+        if idx.dim() == 1:
+            idx = idx.unsqueeze(0)  # Add batch dimension
+        
+        if targets is not None and targets.dim() == 1:
+            targets = targets.unsqueeze(0)
+        
         device = idx.device
         b, t = idx.size()
         assert t <= self.config.block_size, f"Cannot forward sequence of length {t}, block size is only {self.config.block_size}"
