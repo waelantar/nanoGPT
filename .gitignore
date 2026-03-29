@@ -1,12 +1,62 @@
-.DS_Store
-.idea
-.ipynb_checkpoints/
-.vscode
-__pycache__/
-*.bin
-*.pkl
-*.pt
+```
+# Compiled and build artifacts
 *.pyc
-input.txt
-env/
+__pycache__/
+*.o
+*.obj
+*.out
+
+# Dependencies
+.venv/
 venv/
+*_env/
+env/
+node_modules/
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Python specific
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Distribution / packaging
+.Python
+*.so
+.Python
+*.pyc
+__pycache__/
+*$py.class
+*$py.py
+*$py.pyc
+*$py.pyo
+*.zip
+*.tar.gz
+*.tar.bz2
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+*.whl
+```
